@@ -27,7 +27,7 @@ class AIModel {
           openAIApiKey: options.apiKey,
           modelName: options.modelName,
           temperature: options.temperature,
-          configuration: { organization: options.organization },
+          configuration: { organization: options.organization, baseURL: "http://127.0.0.1:8081",},
         });
         break;
       case "bedrock":
