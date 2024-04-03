@@ -27,7 +27,7 @@ class AIModel {
           openAIApiKey: options.apiKey,
           modelName: options.modelName,
           temperature: options.temperature,
-          configuration: { organization: options.organization, baseURL: "http://127.0.0.1:8081",},
+          configuration: { organization: options.organization, baseURL: "http://127.0.0.1:8081"},
         });
         break;
       case "bedrock":
@@ -46,7 +46,16 @@ class AIModel {
   public async callModelJSON(prompt: string): Promise<IFeedback[]> {
     return retryAsync(
       async () => {
-        const modelResponse = await this.callModel(prompt);
+        let modelResponse: string = await this.callModel(prompt);
+
+        // Remove all backslashes from the response
+        modelResponse=modelResponse.replace(/\\/g, '')
+
+        // Check if the response is a JSON array
+        if (!modelResponse.startsWith("[") && !modelResponse.endsWith("]")) {
+          modelResponse = "[" + modelResponse + "]";
+        }
+
         logger.debug(`Model response: ${modelResponse}`);
         try {
           // Use the utility function to parse and decode the specified attributes
